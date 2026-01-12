@@ -14,7 +14,11 @@ spec:
     spec:
       containers:
       - name: todo-app
-        image: todo-app:1.2
+        image: todo-app:1.5
+        ports:
+        - containerPort: 3000
         env:
         - name: PORT
           value: "3000"
+        - name: NODE_ENV
+          value: "production"
