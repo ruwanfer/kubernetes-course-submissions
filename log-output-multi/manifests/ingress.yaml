@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: log-output-multi-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /logs
+        pathType: Prefix
+        backend:
+          service:
+            name: log-output-multi-service
+            port:
+              number: 80
