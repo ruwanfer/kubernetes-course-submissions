@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-app
+  labels:
+    app: image-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-app
+  template:
+    metadata:
+      labels:
+        app: image-app
+    spec:
+      containers:
+      - name: image-app
+        image: image-app:v1
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: image-storage
+          mountPath: /data
+      volumes:
+      - name: image-storage
+        persistentVolumeClaim:
+          claimName: image-pvc
