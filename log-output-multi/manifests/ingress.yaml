@@ -2,8 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: log-output-multi-ingress
-  annotations:
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
 spec:
   rules:
   - http:
@@ -13,5 +11,12 @@ spec:
         backend:
           service:
             name: log-output-multi-service
+            port:
+              number: 80
+      - path: /pingpong
+        pathType: Prefix
+        backend:
+          service:
+            name: pingpong-service
             port:
               number: 80

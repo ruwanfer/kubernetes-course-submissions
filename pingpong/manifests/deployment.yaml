@@ -14,11 +14,18 @@ spec:
       labels:
         app: pingpong
     spec:
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: shared-data-pvc
       containers:
       - name: pingpong
-        image: pingpong:1.0
+        image: pingpong:1.11
         ports:
         - containerPort: 3001
+        volumeMounts:
+          - name: shared-data
+            mountPath: /shared-data
         env:
         - name: PORT
           value: "3001"

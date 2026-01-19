@@ -17,6 +17,9 @@ spec:
       volumes:
         - name: shared-logs
           emptyDir: {}
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: shared-data-pvc
       containers:
         - name: log-writer
           image: log-writer:1.0
@@ -24,10 +27,12 @@ spec:
             - name: shared-logs
               mountPath: /shared-logs
         - name: log-reader
-          image: log-reader:1.0
+          image: log-reader:1.11
           volumeMounts:
             - name: shared-logs
               mountPath: /shared-logs
+            - name: shared-data
+              mountPath: /shared-data
           ports:
             - containerPort: 3000
           env:
