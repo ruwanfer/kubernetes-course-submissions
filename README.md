@@ -15,3 +15,4 @@
 * [1.9.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.9/pingpong)
 * [1.10.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.10/log-output-multi)
 * [1.11.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.11/shared-volume)
+* [1.12.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.12/image-app)
