@@ -8,12 +8,9 @@ const PORT = process.env.PORT || 3000;
 // Helper function to fetch pong count from pingpong service
 async function getPongCount() {
     return new Promise((resolve) => {
-        // In Docker Compose: use service name "pingpong"
-        // In Kubernetes: will use service name "pingpong-service"
-        const hostname = process.env.PINGPONG_SERVICE_HOST || 'pingpong';
-        const port = process.env.PINGPONG_SERVICE_PORT || '3001';
-        
-        console.log(`Fetching pong count from ${hostname}:${port}`);
+        // Use full DNS with namespace: service.namespace
+        const hostname = 'pingpong-service.exercises';
+        const port = 3001;
         
         const options = {
             hostname: hostname,
@@ -29,14 +26,13 @@ async function getPongCount() {
                 data += chunk;
             });
             res.on('end', () => {
-                console.log(`Received pong count: ${data.trim()}`);
                 resolve(data.trim());
             });
         });
 
         req.on('error', (err) => {
             console.error('Error fetching pong count:', err.message);
-            resolve('0'); // Default to 0 if error
+            resolve('0');
         });
 
         req.end();
@@ -47,9 +43,6 @@ const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    console.log(`Received request: ${req.method} ${pathname}`);
-
-    // Handle both / and /logs prefix
     let cleanPath = pathname;
     if (pathname.startsWith('/logs')) {
         cleanPath = pathname.substring(5) || '/';
@@ -62,7 +55,6 @@ const server = http.createServer(async (req, res) => {
                 logContent = fs.readFileSync(LOG_FILE, 'utf8');
             }
 
-            // Get ping-pong count via HTTP
             const pingPongCount = await getPongCount();
             const timestamp = new Date().toISOString();
             const randomString = Math.random().toString(36).substring(2, 15);
@@ -93,5 +85,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`Reader server started on port ${PORT}`);
-    console.log(`Log file path: ${LOG_FILE}`);
+    console.log(`Will fetch pong count from: pingpong-service.exercises:3001/count`);
 });
