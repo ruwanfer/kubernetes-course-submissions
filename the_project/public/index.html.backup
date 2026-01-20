@@ -108,71 +108,32 @@
             padding: 40px 20px;
             font-style: italic;
         }
-        .loading {
-            text-align: center;
-            color: #667eea;
-            padding: 20px;
-        }
-        .error {
-            color: #ff6b6b;
-            padding: 10px;
-            background: #fff5f5;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1># The project App</h1>
         <p class="subtitle">DevOps with Kubernetes 2025</p>
-
+        
         <div id="root"></div>
-
+        
         <div style="text-align: center; margin-top: 30px; color: #888; font-size: 12px;">
-            <p>Exercise 2.2: Todo app with backend service</p>
-            <p>• Frontend (port 3000) • Backend (port 3002) • REST API</p>
+            <p>Exercise 1.13: Todo app with React</p>
+            <p>• Input field (max 140 chars) • Send button • Todo list</p>
         </div>
     </div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState } = React;
 
         function TodoApp() {
-            const [todos, setTodos] = useState([]);
+            const [todos, setTodos] = useState([
+                { id: 1, text: 'Learn JavaScript' },
+                { id: 2, text: 'Learn React' },
+                { id: 3, text: 'Build a project' }
+            ]);
             const [newTodo, setNewTodo] = useState('');
-            const [loading, setLoading] = useState(true);
-            const [error, setError] = useState(null);
             const MAX_CHARS = 140;
-
-            // Backend API URL - will be different in Kubernetes
-            const API_BASE = window.location.hostname === 'localhost' 
-                ? 'http://localhost:3002' 
-                : 'http://todo-backend-service:3002';
-
-            // Fetch todos from backend
-            useEffect(() => {
-                fetchTodos();
-            }, []);
-
-            const fetchTodos = async () => {
-                try {
-                    setLoading(true);
-                    setError(null);
-                    const response = await fetch(`${API_BASE}/todos`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setTodos(data);
-                } catch (err) {
-                    setError(`Failed to load todos: ${err.message}`);
-                    console.error('Error fetching todos:', err);
-                } finally {
-                    setLoading(false);
-                }
-            };
 
             const handleInputChange = (e) => {
                 const value = e.target.value;
@@ -181,29 +142,14 @@
                 }
             };
 
-            const handleAddTodo = async () => {
+            const handleAddTodo = () => {
                 if (newTodo.trim() && newTodo.length <= MAX_CHARS) {
-                    try {
-                        setError(null);
-                        const response = await fetch(`${API_BASE}/todos`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ text: newTodo.trim() })
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}`);
-                        }
-
-                        const newTodoItem = await response.json();
-                        setTodos([...todos, newTodoItem]);
-                        setNewTodo('');
-                    } catch (err) {
-                        setError(`Failed to create todo: ${err.message}`);
-                        console.error('Error creating todo:', err);
-                    }
+                    const newTodoItem = {
+                        id: Date.now(),
+                        text: newTodo.trim()
+                    };
+                    setTodos([...todos, newTodoItem]);
+                    setNewTodo('');
                 }
             };
 
@@ -212,8 +158,6 @@
 
             return (
                 <div>
-                    {error && <div className="error">{error}</div>}
-                    
                     <div className="input-container">
                         <input
                             type="text"
@@ -226,32 +170,28 @@
                         <button
                             className="send-button"
                             onClick={handleAddTodo}
-                            disabled={!newTodo.trim() || newTodo.length > MAX_CHARS || loading}
+                            disabled={!newTodo.trim() || newTodo.length > MAX_CHARS}
                         >
-                            {loading ? 'Creating...' : 'Create todo'}
+                            Create todo
                         </button>
                     </div>
-
+                    
                     <div className={`char-count ${charsLeft < 20 ? 'warning' : ''}`}>
                         {charsLeft} characters remaining
                         {isOverLimit && <span> - Over limit!</span>}
                     </div>
 
-                    {loading ? (
-                        <div className="loading">Loading todos...</div>
-                    ) : (
-                        <ul className="todo-list">
-                            {todos.length === 0 ? (
-                                <li className="empty-state">No todos yet. Add one above!</li>
-                            ) : (
-                                todos.map(todo => (
-                                    <li key={todo.id} className="todo-item">
-                                        <span className="todo-text">{todo.text}</span>
-                                    </li>
-                                ))
-                            )}
-                        </ul>
-                    )}
+                    <ul className="todo-list">
+                        {todos.length === 0 ? (
+                            <li className="empty-state">No todos yet. Add one above!</li>
+                        ) : (
+                            todos.map(todo => (
+                                <li key={todo.id} className="todo-item">
+                                    <span className="todo-text">{todo.text}</span>
+                                </li>
+                            ))
+                        )}
+                    </ul>
                 </div>
             );
         }
