@@ -19,3 +19,5 @@
 * [1.13.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.13/the_project)
 * [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/pingpong)
 * [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/log-output-multi)
+* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/todo-backend)
+* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/the_project)
