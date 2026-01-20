@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pingpong
-  labels:
-    app: pingpong
 spec:
   replicas: 1
   selector:
@@ -14,18 +12,8 @@ spec:
       labels:
         app: pingpong
     spec:
-      volumes:
-        - name: shared-data
-          persistentVolumeClaim:
-            claimName: shared-data-pvc
       containers:
       - name: pingpong
-        image: pingpong:1.11
+        image: pingpong:v2
         ports:
         - containerPort: 3001
-        volumeMounts:
-          - name: shared-data
-            mountPath: /shared-data
-        env:
-        - name: PORT
-          value: "3001"

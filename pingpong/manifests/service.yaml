@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: pingpong-service
 spec:
-  type: ClusterIP
   selector:
     app: pingpong
   ports:
-  - port: 80
+  - port: 3001
     targetPort: 3001
+  type: ClusterIP
