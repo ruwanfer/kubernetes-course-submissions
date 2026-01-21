@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-config
+  namespace: project
+data:
+  backend_url: "http://todo-backend-service.project:3002"
+  max_todo_length: "140"
+  environment: "production"

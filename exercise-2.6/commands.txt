@@ -1,0 +1,5 @@
+kubectl patch deployment todo-backend -n project --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/env", "value": [{"name": "PORT", "value": "3002"}, {"name": "MAX_TODO_LENGTH", "value": "140"}, {"name": "NODE_ENV", "value": "production"}]}]'
+
+kubectl patch deployment todo-app -n project --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/env", "value": [{"name": "API_URL", "value": "http://todo-backend-service.project:3002"}, {"name": "FRONTEND_PORT", "value": "3000"}, {"name": "MAX_TODO_LENGTH", "value": "140"}]}]'
+
+kubectl apply -f project-config.yaml
