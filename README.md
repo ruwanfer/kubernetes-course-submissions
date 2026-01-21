@@ -26,3 +26,4 @@
 * [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/the_project)
 * [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/pingpong)
 * [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/log-output-multi)
+* [2.4.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.4/exercise-2.4)
