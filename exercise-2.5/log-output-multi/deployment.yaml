@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-multi
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output-multi
+  template:
+    metadata:
+      labels:
+        app: log-output-multi
+    spec:
+      containers:
+      - name: reader
+        image: k3d-k3s-default-registry:5000/log-reader:v2
+        ports:
+        - containerPort: 3000
+        # Environment variable from ConfigMap
+        env:
+        - name: MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: log-output-config
+              key: MESSAGE
+        # Mount ConfigMap as volume
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: log-output-config
