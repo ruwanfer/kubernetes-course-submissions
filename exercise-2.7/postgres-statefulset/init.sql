@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS pingpong_counter (
+  id SERIAL PRIMARY KEY,
+  counter INTEGER NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO pingpong_counter (id, counter) 
+VALUES (1, 0) 
+ON CONFLICT (id) DO NOTHING;
