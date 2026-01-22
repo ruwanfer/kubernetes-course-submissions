@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: wikipedia-todo-generator
+  namespace: project
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: todo-generator
+            image: wikipedia-todo-generator:v1
+            env:
+            - name: BACKEND_URL
+              value: "http://todo-backend-service.project:3002"
+          restartPolicy: OnFailure
