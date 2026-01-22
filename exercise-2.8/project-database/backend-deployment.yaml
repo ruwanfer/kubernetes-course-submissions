@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-db
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend-db
+  template:
+    metadata:
+      labels:
+        app: todo-backend-db
+    spec:
+      containers:
+      - name: todo-backend
+        image: todo-backend:v7  # Use existing or build new
+        ports:
+        - containerPort: 3002
+        env:
+        # From ConfigMap
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: todo-db-config
+              key: host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: todo-db-config
+              key: port
+        - name: DB_SSL
+          valueFrom:
+            configMapKeyRef:
+              name: todo-db-config
+              key: sslmode
+        # From Secret
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: todo-db-secret
+              key: database
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: todo-db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: todo-db-secret
+              key: password
