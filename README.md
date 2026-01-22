@@ -29,3 +29,4 @@
 * [2.4.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.4/exercise-2.4)
 * [2.5.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.5/exercise-2.5)
 * [2.6.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.6/exercise-2.6)
+* [2.7.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.7/exercise-2.7)
