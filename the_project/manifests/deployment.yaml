@@ -2,23 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-app
+  namespace: project
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo
+      app: todo-app
   template:
     metadata:
       labels:
-        app: todo
+        app: todo-app
     spec:
       containers:
       - name: todo-app
-        image: todo-app:1.6
+        image: todo-frontend:v4
         ports:
         - containerPort: 3000
         env:
-        - name: PORT
-          value: "3000"
-        - name: NODE_ENV
-          value: "production"
+        - name: FRONTEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: FRONTEND_PORT
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: API_BASE_URL
+        - name: MAX_TODO_LENGTH
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: MAX_TODO_LENGTH

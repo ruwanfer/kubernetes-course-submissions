@@ -1,20 +1,16 @@
 const http = require('http');
 const fs = require('fs');
-const url = require('url');
 
 const LOG_FILE = '/shared-logs/log.txt';
 const PORT = process.env.PORT || 3000;
+const CONFIG_FILE = '/etc/config/information.txt';
 
 // Helper function to fetch pong count from pingpong service
 async function getPongCount() {
     return new Promise((resolve) => {
-        // Use full DNS with namespace: service.namespace
-        const hostname = 'pingpong-service.exercises';
-        const port = 3001;
-        
         const options = {
-            hostname: hostname,
-            port: port,
+            hostname: 'pingpong-service.exercises',
+            port: 3001,
             path: '/count',
             method: 'GET',
             timeout: 5000
@@ -26,22 +22,33 @@ async function getPongCount() {
                 data += chunk;
             });
             res.on('end', () => {
-                resolve(data.trim());
+                resolve({ success: true, count: data.trim() });
             });
         });
 
         req.on('error', (err) => {
-            console.error('Error fetching pong count:', err.message);
-            resolve('0');
+            resolve({ success: false, error: err.message });
         });
 
         req.end();
     });
 }
 
+// Read config file
+function readConfigFile() {
+    try {
+        if (fs.existsSync(CONFIG_FILE)) {
+            return fs.readFileSync(CONFIG_FILE, 'utf8').trim();
+        }
+        return 'Config file not found';
+    } catch (err) {
+        return `Error reading config: ${err.message}`;
+    }
+}
+
 const server = http.createServer(async (req, res) => {
-    const parsedUrl = url.parse(req.url, true);
-    const pathname = parsedUrl.pathname;
+    const url = req.url;
+    const pathname = url.split('?')[0];
 
     let cleanPath = pathname;
     if (pathname.startsWith('/logs')) {
@@ -58,32 +65,50 @@ const server = http.createServer(async (req, res) => {
             const pingPongCount = await getPongCount();
             const timestamp = new Date().toISOString();
             const randomString = Math.random().toString(36).substring(2, 15);
+            
+            const fileContent = readConfigFile();
+            const envMessage = process.env.MESSAGE || 'MESSAGE not set';
 
             res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end(`${timestamp}: ${randomString}.\nPing / Pongs: ${pingPongCount}`);
+            res.end(`file content: ${fileContent}\nenv variable: MESSAGE=${envMessage}\n${timestamp}: ${randomString}.\nPing / Pongs: ${pingPongCount.success ? pingPongCount.count : '0'}`);
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'text/plain' });
             res.end(`Error: ${err.message}`);
         }
     } else if (req.method === 'GET' && cleanPath === '/status') {
+        // Readiness probe endpoint - checks pingpong connection
         const timestamp = new Date().toISOString();
         const logFileExists = fs.existsSync(LOG_FILE);
+        const configFileExists = fs.existsSync(CONFIG_FILE);
         const logStats = logFileExists ? fs.statSync(LOG_FILE) : null;
-
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        
+        // Check pingpong connection
+        const pingpongCheck = await getPongCount();
+        const pingpongHealthy = pingpongCheck.success;
+        
+        const statusCode = pingpongHealthy ? 200 : 503;
+        
+        res.writeHead(statusCode, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
             timestamp: timestamp,
             logFileExists: logFileExists,
             logFileSize: logStats ? logStats.size : 0,
-            status: 'running'
+            configFileExists: configFileExists,
+            messageEnv: process.env.MESSAGE || 'not set',
+            pingpong: {
+                healthy: pingpongHealthy,
+                error: pingpongCheck.error || null
+            },
+            status: pingpongHealthy ? 'ready' : 'not_ready'
         }));
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end(`Not Found. Path: ${pathname}, Clean: ${cleanPath}\n`);
+        res.end(`Not Found. Path: ${pathname}\n`);
     }
 });
 
 server.listen(PORT, () => {
     console.log(`Reader server started on port ${PORT}`);
-    console.log(`Will fetch pong count from: pingpong-service.exercises:3001/count`);
+    console.log(`Config file path: ${CONFIG_FILE}`);
+    console.log(`MESSAGE env: ${process.env.MESSAGE || 'not set'}`);
 });

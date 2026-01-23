@@ -1,203 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo App - The Project</title>
+    <title>Todo App</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        .input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .todo-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .todo-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .char-count {
-            font-size: 12px;
-            color: #999;
-            text-align: right;
-            margin-top: 5px;
-        }
-        .char-count.warning {
-            color: #ff6b6b;
-        }
-        .send-button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .send-button:hover {
-            background: #5a67d8;
-        }
-        .send-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        .todo-list {
-            list-style: none;
-            margin-top: 20px;
-        }
-        .todo-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .todo-text {
-            color: #333;
-        }
-        .empty-state {
-            text-align: center;
-            color: #999;
-            padding: 40px 20px;
-            font-style: italic;
-        }
+        body { font-family: Arial; padding: 20px; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px; margin-left: 10px; }
+        li { margin: 5px 0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1># The project App</h1>
-        <p class="subtitle">DevOps with Kubernetes 2025</p>
-        
-        <div id="root"></div>
-        
-        <div style="text-align: center; margin-top: 30px; color: #888; font-size: 12px;">
-            <p>Exercise 1.13: Todo app with React</p>
-            <p>• Input field (max 140 chars) • Send button • Todo list</p>
-        </div>
-    </div>
-
+    <h1># The project App</h1>
+    <div id="root"></div>
+    
     <script type="text/babel">
-        const { useState } = React;
-
+        const { useState, useEffect } = React;
+        
         function TodoApp() {
-            const [todos, setTodos] = useState([
-                { id: 1, text: 'Learn JavaScript' },
-                { id: 2, text: 'Learn React' },
-                { id: 3, text: 'Build a project' }
-            ]);
-            const [newTodo, setNewTodo] = useState('');
-            const MAX_CHARS = 140;
-
-            const handleInputChange = (e) => {
-                const value = e.target.value;
-                if (value.length <= MAX_CHARS) {
-                    setNewTodo(value);
+            const [todos, setTodos] = useState([]);
+            const [text, setText] = useState('');
+            
+            // Backend in project namespace
+            const API_BASE = 'http://todo-backend-service.project:3002';
+            
+            // Load todos from backend
+            useEffect(() => {
+                fetch(`${API_BASE}/todos`)
+                    .then(res => res.json())
+                    .then(data => setTodos(data))
+                    .catch(err => console.error('Failed to load todos:', err));
+            }, []);
+            
+            const addTodo = () => {
+                if (text.trim()) {
+                    fetch(`${API_BASE}/todos`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text })
+                    })
+                    .then(res => res.json())
+                    .then(newTodo => {
+                        setTodos([...todos, newTodo]);
+                        setText('');
+                    })
+                    .catch(err => console.error('Failed to add todo:', err));
                 }
             };
-
-            const handleAddTodo = () => {
-                if (newTodo.trim() && newTodo.length <= MAX_CHARS) {
-                    const newTodoItem = {
-                        id: Date.now(),
-                        text: newTodo.trim()
-                    };
-                    setTodos([...todos, newTodoItem]);
-                    setNewTodo('');
-                }
-            };
-
-            const charsLeft = MAX_CHARS - newTodo.length;
-            const isOverLimit = newTodo.length > MAX_CHARS;
-
+            
             return (
                 <div>
-                    <div className="input-container">
-                        <input
-                            type="text"
-                            className="todo-input"
-                            placeholder="What needs to be done?"
-                            value={newTodo}
-                            onChange={handleInputChange}
-                            maxLength={MAX_CHARS}
-                        />
-                        <button
-                            className="send-button"
-                            onClick={handleAddTodo}
-                            disabled={!newTodo.trim() || newTodo.length > MAX_CHARS}
-                        >
-                            Create todo
-                        </button>
-                    </div>
+                    <input 
+                        value={text}
+                        onChange={e => setText(e.target.value)}
+                        placeholder="New todo (max 140 chars)"
+                        maxLength={140}
+                    />
+                    <button onClick={addTodo}>Create todo</button>
                     
-                    <div className={`char-count ${charsLeft < 20 ? 'warning' : ''}`}>
-                        {charsLeft} characters remaining
-                        {isOverLimit && <span> - Over limit!</span>}
-                    </div>
-
-                    <ul className="todo-list">
-                        {todos.length === 0 ? (
-                            <li className="empty-state">No todos yet. Add one above!</li>
-                        ) : (
-                            todos.map(todo => (
-                                <li key={todo.id} className="todo-item">
-                                    <span className="todo-text">{todo.text}</span>
-                                </li>
-                            ))
-                        )}
+                    <ul>
+                        {todos.map(todo => (
+                            <li key={todo.id}>{todo.text}</li>
+                        ))}
                     </ul>
+                    
+                    <p>DevOps with Kubernetes 2025</p>
                 </div>
             );
         }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<TodoApp />);
+        
+        ReactDOM.render(<TodoApp />, document.getElementById('root'));
     </script>
 </body>
 </html>

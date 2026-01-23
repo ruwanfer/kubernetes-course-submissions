@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-config
+  namespace: project
+data:
+  # Backend configurations
+  BACKEND_PORT: "3002"
+  BACKEND_HOST: "todo-backend-service.project"
+  
+  # Frontend configurations  
+  FRONTEND_PORT: "3000"
+  MAX_TODO_LENGTH: "140"
+  
+  # API endpoints
+  API_BASE_URL: "http://todo-backend-service.project:3002"

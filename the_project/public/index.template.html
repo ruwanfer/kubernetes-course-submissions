@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Todo App - Project Namespace</title>
+    <title>Todo App - Project</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -13,12 +13,17 @@
         button:hover { background: #0056b3; }
         ul { list-style: none; padding: 0; }
         li { padding: 10px; background: #f5f5f5; margin: 5px 0; border-radius: 4px; }
-        .namespace { color: #666; font-size: 12px; margin-top: 20px; }
+        .config { background: #e9ecef; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 12px; }
     </style>
 </head>
 <body>
     <h1># The project App</h1>
-    <p>Running in <strong>project</strong> namespace</p>
+    <div class="config">
+        <strong>Configurations from environment:</strong><br>
+        API Base: {{API_BASE_URL}}<br>
+        Max Todo Length: {{MAX_TODO_LENGTH}} chars<br>
+        Port: {{FRONTEND_PORT}}
+    </div>
     <div id="root"></div>
     
     <script type="text/babel">
@@ -29,8 +34,9 @@
             const [text, setText] = useState('');
             const [loading, setLoading] = useState(true);
             
-            // Backend service in project namespace
-            const API_BASE = 'http://todo-backend-service.project:3002';
+            // Get config from server-rendered placeholders or defaults
+            const API_BASE = '{{API_BASE_URL}}' || 'http://todo-backend-service.project:3002';
+            const MAX_LENGTH = parseInt('{{MAX_TODO_LENGTH}}') || 140;
             
             useEffect(() => {
                 fetchTodos();
@@ -44,14 +50,14 @@
                     setTodos(data);
                 } catch (err) {
                     console.error('Failed to load todos:', err);
-                    alert('Cannot connect to backend in project namespace');
+                    alert(`Cannot connect to backend at ${API_BASE}`);
                 } finally {
                     setLoading(false);
                 }
             };
             
             const addTodo = async () => {
-                if (text.trim()) {
+                if (text.trim() && text.length <= MAX_LENGTH) {
                     try {
                         const response = await fetch(`${API_BASE}/todos`, {
                             method: 'POST',
@@ -76,8 +82,8 @@
                         <input 
                             value={text}
                             onChange={e => setText(e.target.value)}
-                            placeholder="Enter new todo (max 140 chars)"
-                            maxLength={140}
+                            placeholder={`Enter new todo (max ${MAX_LENGTH} chars)`}
+                            maxLength={MAX_LENGTH}
                         />
                         <button onClick={addTodo}>Create todo</button>
                     </div>
@@ -96,11 +102,7 @@
                         </ul>
                     )}
                     
-                    <div className="namespace">
-                        <p>DevOps with Kubernetes 2025</p>
-                        <p>Frontend: todo-service.project</p>
-                        <p>Backend: todo-backend-service.project:3002</p>
-                    </div>
+                    <p>DevOps with Kubernetes 2025</p>
                 </div>
             );
         }

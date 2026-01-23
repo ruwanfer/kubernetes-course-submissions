@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pingpong:
+    build: ./pingpong
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+
+  log-output:
+    build: 
+      context: ./log-output-multi
+      dockerfile: Dockerfile.reader
+    ports:
+      - "3000:3000"
+    environment:
+      - PINGPONG_SERVICE_HOST=pingpong
+      - PINGPONG_SERVICE_PORT=3001
+    depends_on:
+      - pingpong
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

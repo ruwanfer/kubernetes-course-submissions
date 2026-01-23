@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pingpong
+  namespace: exercises
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,24 @@ spec:
     spec:
       containers:
       - name: pingpong
-        image: pingpong:v2
+        image: pingpong-db:v1
         ports:
         - containerPort: 3001
+        env:
+        - name: POSTGRES_HOST
+          value: postgres-service.exercises
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: pingpongdb
+        - name: POSTGRES_USER
+          value: pingponguser
+        - name: POSTGRES_PASSWORD
+          value: pingpongpass
+        readinessProbe:
+          httpGet:
+            path: /count
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3

@@ -1,0 +1,14 @@
+image-app.tar
+*.tar
+# Large files
+*.tar
+*.tar.gz
+image-app.tar
+image-app.tar.gz
+
+# Directories
+node_modules/
+__pycache__/
+.venv/
+venv/
+data/

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todo-backend
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -17,3 +18,19 @@ spec:
         image: todo-backend:v1
         ports:
         - containerPort: 3002
+        env:
+        - name: BACKEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: BACKEND_PORT
+        - name: BACKEND_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: BACKEND_HOST
+        - name: MAX_TODO_LENGTH
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: MAX_TODO_LENGTH

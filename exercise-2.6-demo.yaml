@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-demo
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-demo
+  template:
+    metadata:
+      labels:
+        app: config-demo
+    spec:
+      containers:
+      - name: demo
+        image: nginx:alpine
+        env:
+        - name: API_URL
+          value: "http://todo-backend-service.project:3002"
+        - name: MAX_ITEMS
+          value: "100"
+        - name: DEBUG_MODE
+          value: "false"
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: BACKEND_HOST
