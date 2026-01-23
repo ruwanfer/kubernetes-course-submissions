@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App - Project Namespace</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        h1 { color: #333; }
+        input { padding: 10px; width: 300px; margin-right: 10px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px; background: #f5f5f5; margin: 5px 0; border-radius: 4px; }
+        .namespace { color: #666; font-size: 12px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1># The project App</h1>
+    <p>Running in <strong>project</strong> namespace</p>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        function TodoApp() {
+            const [todos, setTodos] = useState([]);
+            const [text, setText] = useState('');
+            const [loading, setLoading] = useState(true);
+            
+            // Backend service in project namespace
+            const API_BASE = 'http://todo-backend-service.project:3002';
+            
+            useEffect(() => {
+                fetchTodos();
+            }, []);
+            
+            const fetchTodos = async () => {
+                try {
+                    setLoading(true);
+                    const response = await fetch(`${API_BASE}/todos`);
+                    const data = await response.json();
+                    setTodos(data);
+                } catch (err) {
+                    console.error('Failed to load todos:', err);
+                    alert('Cannot connect to backend in project namespace');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            
+            const addTodo = async () => {
+                if (text.trim()) {
+                    try {
+                        const response = await fetch(`${API_BASE}/todos`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ text: text.trim() })
+                        });
+                        
+                        if (response.ok) {
+                            const newTodo = await response.json();
+                            setTodos([...todos, newTodo]);
+                            setText('');
+                        }
+                    } catch (err) {
+                        console.error('Failed to add todo:', err);
+                    }
+                }
+            };
+            
+            return (
+                <div>
+                    <div>
+                        <input 
+                            value={text}
+                            onChange={e => setText(e.target.value)}
+                            placeholder="Enter new todo (max 140 chars)"
+                            maxLength={140}
+                        />
+                        <button onClick={addTodo}>Create todo</button>
+                    </div>
+                    
+                    {loading ? (
+                        <p>Loading todos...</p>
+                    ) : (
+                        <ul>
+                            {todos.length === 0 ? (
+                                <li>No todos yet. Add one above!</li>
+                            ) : (
+                                todos.map(todo => (
+                                    <li key={todo.id}>{todo.text}</li>
+                                ))
+                            )}
+                        </ul>
+                    )}
+                    
+                    <div className="namespace">
+                        <p>DevOps with Kubernetes 2025</p>
+                        <p>Frontend: todo-service.project</p>
+                        <p>Backend: todo-backend-service.project:3002</p>
+                    </div>
+                </div>
+            );
+        }
+        
+        ReactDOM.render(<TodoApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
