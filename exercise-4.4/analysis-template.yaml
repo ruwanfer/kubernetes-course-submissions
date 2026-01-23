@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: pingpong-cpu-usage
+spec:
+  metrics:
+  - name: cpu-usage-rate
+    interval: 30s
+    initialDelay: 1m
+    successCondition: result <= 0.7  # 70% CPU threshold
+    failureLimit: 2
+    provider:
+      prometheus:
+        address: http://prometheus-kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090
+        query: |
+          sum(
+            rate(container_cpu_usage_seconds_total{namespace="exercises", container="pingpong"}[5m])
+          )
