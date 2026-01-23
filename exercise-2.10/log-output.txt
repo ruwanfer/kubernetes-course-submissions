@@ -1,0 +1,13 @@
+Logs showing backend validation working:
+
+1. Valid todo (15 chars) - ACCEPTED:
+{"timestamp":"2026-01-23T12:45:06.321Z","event":"create_todo_attempt","textLength":15,"textPreview":"Test valid todo"}
+{"timestamp":"2026-01-23T12:45:06.322Z","event":"create_todo_success","todoId":4,"textLength":15}
+
+2. Too long todo (169 chars) - REJECTED:
+{"timestamp":"2026-01-23T12:45:14.431Z","event":"create_todo_attempt","textLength":169,"textPreview":"This todo is way too long and should be rejected b..."}
+{"timestamp":"2026-01-23T12:45:14.431Z","event":"create_todo_rejected","reason":"too_long","maxLength":140,"actualLength":169}
+
+3. Empty todo - REJECTED:
+{"timestamp":"2026-01-23T12:45:26.691Z","event":"create_todo_attempt","textLength":0,"textPreview":"empty"}
+{"timestamp":"2026-01-23T12:45:26.692Z","event":"create_todo_rejected","reason":"empty_text"}
