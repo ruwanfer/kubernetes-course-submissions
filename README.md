@@ -43,3 +43,4 @@
 * [4.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.3/exercise-4.3)
 * [4.4.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.4/exercise-4.4)
 * [4.5.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.5/exercise-4.5)
+* [4.6.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.6/exercise-4.6)
