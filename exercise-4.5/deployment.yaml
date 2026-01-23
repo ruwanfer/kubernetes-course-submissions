@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-v2
+spec:
+  template:
+    spec:
+      containers:
+      - name: todo-backend
+        image: todo-backend:v2
