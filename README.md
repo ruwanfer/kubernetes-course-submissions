@@ -20,12 +20,12 @@
 
 ### Chapter 3
 
-* [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/pingpong)
-* [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/log-output-multi)
-* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/todo-backend)
-* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/the_project)
-* [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/pingpong)
-* [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/log-output-multi)
+* [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/pingpong) - Pingpong exercise
+* [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/log-output-multi) - Log output multi exercise
+* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/todo-backend) - Todo backend
+* [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/the_project) - The project
+* [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/pingpong) - Pingpong updated
+* [2.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.3/log-output-multi) - Log output multi updated
 * [2.4.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.4/exercise-2.4)
 * [2.5.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.5/exercise-2.5)
 * [2.6.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.6/exercise-2.6)
@@ -34,9 +34,6 @@
 * [2.9.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.9/exercise-2.9)
 * [2.10.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.10/exercise-2.10)
 
-### Chapter 4
-
-
 ### Chapter 5
 
-* [4.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.1/exercise-4.1)
+* [4.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.1) - Exercise 4.1
