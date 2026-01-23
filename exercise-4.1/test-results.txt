@@ -1,0 +1,10 @@
+Test 1: With database running
+- pingpong: 1/1 READY (readiness probe /count passes)
+- log-output-multi: 2/2 READY (readiness probe /status passes)
+
+Test 2: Without database (scaled to 0)
+- pingpong: 0/1 READY (readiness probe fails - no database)
+- log-output-multi: 1/2 READY (reader not ready - pingpong unavailable)
+
+Test 3: Restore database
+- Both pods automatically become READY when dependencies available
