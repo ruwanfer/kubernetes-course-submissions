@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-multi
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output-multi
+  template:
+    metadata:
+      labels:
+        app: log-output-multi
+    spec:
+      containers:
+      - name: reader
+        image: PROJECT/IMAGE  # Will be replaced by Kustomize
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
