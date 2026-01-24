@@ -1,0 +1,75 @@
+name: Multi-environment GitOps
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Docker Login
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and Push
+      run: |
+        cd the_project
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/the-project:$GITHUB_SHA .
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/the-project:$GITHUB_SHA
+        
+        # If tagged, also push with tag
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          TAG=${GITHUB_REF#refs/tags/}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/the-project:$GITHUB_SHA ${{ secrets.DOCKERHUB_USERNAME }}/the-project:$TAG
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/the-project:$TAG
+        fi
+        
+  deploy-staging:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Update staging image
+      uses: imranismail/setup-kustomize@v2
+      run: |
+        cd exercise-4.9/overlays/staging
+        kustomize edit set image PROJECT/IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/the-project:$GITHUB_SHA
+        
+    - name: Commit staging update
+      uses: EndBug/add-and-commit@v9
+      with:
+        add: 'exercise-4.9/overlays/staging/kustomization.yaml'
+        message: "Staging: Update image to $GITHUB_SHA"
+        
+  deploy-production:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Update production image
+      uses: imranismail/setup-kustomize@v2
+      run: |
+        cd exercise-4.9/overlays/production
+        TAG=${GITHUB_REF#refs/tags/}
+        kustomize edit set image PROJECT/IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/the-project:$TAG
+        
+    - name: Commit production update
+      uses: EndBug/add-and-commit@v9
+      with:
+        add: 'exercise-4.9/overlays/production/kustomization.yaml'
+        message: "Production: Deploy tag ${GITHUB_REF#refs/tags/}"

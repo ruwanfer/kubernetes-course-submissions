@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: project-production
+namePrefix: production-
+commonLabels:
+  environment: production
+
+resources:
+- ../../base
+
+patchesStrategicMerge:
+- deployment-patch.yaml
+- configmap-patch.yaml
+- ingress-patch.yaml
+
+images:
+- name: PROJECT/IMAGE
+  newName: yourusername/the-project
+  newTag: v1.0.0  # Tagged version
+
+replacements:
+- source:
+    kind: ConfigMap
+    name: project-config
+    fieldPath: data.API_BASE_URL
+  targets:
+  - select:
+      kind: Deployment
+      name: the-project
+    fieldPaths:
+    - spec.template.spec.containers.[name=frontend].env.[name=API_BASE_URL].value

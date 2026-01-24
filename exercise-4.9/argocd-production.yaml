@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: the-project-production
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ruwanfer/kubernetes-course-submissions.git
+    targetRevision: tags/v.*  # Deploys on version tags
+    path: exercise-4.9/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: project-production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false  # Manual sync for production
+    syncOptions:
+    - CreateNamespace=true

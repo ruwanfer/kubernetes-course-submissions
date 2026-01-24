@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: the-project
+spec:
+  replicas: REPLICA_COUNT
+  selector:
+    matchLabels:
+      app: the-project
+  template:
+    metadata:
+      labels:
+        app: the-project
+    spec:
+      containers:
+      - name: frontend
+        image: PROJECT/IMAGE
+        ports:
+        - containerPort: 3000
+        env:
+        - name: FRONTEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: FRONTEND_PORT
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: API_BASE_URL
+        - name: MAX_TODO_LENGTH
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: MAX_TODO_LENGTH
+        - name: ENVIRONMENT
+          value: ENV_VALUE
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
