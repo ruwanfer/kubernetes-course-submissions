@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+      - name: todo-app
+        image: PROJECT/IMAGE  # Will be replaced by Kustomize
+        ports:
+        - containerPort: 3000
+        env:
+        - name: FRONTEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: FRONTEND_PORT
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: API_BASE_URL
+        - name: MAX_TODO_LENGTH
+          valueFrom:
+            configMapKeyRef:
+              name: project-config
+              key: MAX_TODO_LENGTH
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
