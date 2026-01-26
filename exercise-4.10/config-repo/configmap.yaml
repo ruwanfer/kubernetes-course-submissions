@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: default
+  labels:
+    app: flask-app
+    exercise: "4.10"
+    owner: "ruwanfer"
+data:
+  app_name: "Kubernetes Exercise 4.10 - ruwanfer"
+  environment: "production"
+  version: "1.0.0"
+  owner: "ruwanfer"
+  description: "Separate code and configuration example"
