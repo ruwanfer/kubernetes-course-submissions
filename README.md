@@ -1,9 +1,7 @@
 # Kubernetes Course Submissions
 
 ## Exercises
-
 ### Chapter 2
-
 * [1.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.1/log_output)
 * [1.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.2/the_project)
 * [1.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.3/log_output)
@@ -17,9 +15,7 @@
 * [1.11.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.11/shared-volume)
 * [1.12.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.12/image-app)
 * [1.13.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/1.13/the_project)
-
 ### Chapter 3
-
 * [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/pingpong)
 * [2.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.1/log-output-multi)
 * [2.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.2/todo-backend)
@@ -33,11 +29,8 @@
 * [2.8.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.8/exercise-2.8)
 * [2.9.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.9/exercise-2.9)
 * [2.10.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/2.10/exercise-2.10)
-
 ### Chapter 4
-
 ### Chapter 5
-
 * [4.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.1/exercise-4.1)
 * [4.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.2/exercise-4.2)
 * [4.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.3/exercise-4.3)
@@ -49,4 +42,14 @@
 * [4.9.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.9/exercise-4.9)
 * [4.10.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.10/exercise-4.10)
 4.10.
+Chapter 5
+4.1.
+4.2.
+4.3.
+4.4.
+4.5.
+4.6.
+4.7.
+4.8.
+4.9.
 4.10.
