@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummysite-{NAME}
+  labels:
+    app: dummysite
+    dummysite: {NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummysite
+      dummysite: {NAME}
+  template:
+    metadata:
+      labels:
+        app: dummysite
+        dummysite: {NAME}
+    spec:
+      containers:
+      - name: website
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        env:
+        - name: WEBSITE_URL
+          value: "{URL}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dummysite-{NAME}-svc
+  labels:
+    app: dummysite
+    dummysite: {NAME}
+spec:
+  type: ClusterIP
+  selector:
+    app: dummysite
+    dummysite: {NAME}
+  ports:
+  - port: 80
+    targetPort: 80
