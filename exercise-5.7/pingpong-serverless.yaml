@@ -1,0 +1,14 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pingpong
+spec:
+  template:
+    spec:
+      containers:
+      - image: <pingpong-image>  # Your Ping-pong app image
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
