@@ -49,3 +49,4 @@
 * [5.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.2/exercise-5.2)
 * [5.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.3/exercise-5.3)
 * [5.4.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.4/exercise-5.4)
+* [5.6.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.6/exercise-5.6)
