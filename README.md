@@ -35,6 +35,7 @@
 ### Chapter 4
 * [3.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/3.1/exercise-3.1)
 * [3.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/3.2/exercise-3.2)
+* [3.3.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/3.3/exercise-3.3)
 
 ### Chapter 5
 * [4.1.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/4.1/exercise-4.1)
@@ -57,5 +58,4 @@
 * [5.7.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.7/exercise-5.7)
 * [5.8.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/5.8/exercise-5.8)
 
-### Chapter 4
-* [3.2.](https://github.com/ruwanfer/kubernetes-course-submissions/tree/3.2/exercise-3.2)
+
