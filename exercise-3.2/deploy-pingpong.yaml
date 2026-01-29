@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingpong-deployment
+  labels:
+    app: pingpong
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pingpong
+  template:
+    metadata:
+      labels:
+        app: pingpong
+    spec:
+      containers:
+      - name: pingpong-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        command: ["/bin/sh"]
+        args:
+        - -c
+        - |
+          # Create index.html
+          echo 'pong' > /usr/share/nginx/html/index.html
+          
+          # Create nginx config that returns "pong" for any path
+          cat > /etc/nginx/conf.d/default.conf << 'NGINX_CONFIG'
+          server {
+              listen 80;
+              server_name _;
+              
+              location / {
+                  return 200 'pong\n';
+                  add_header Content-Type text/plain;
+              }
+          }
+          NGINX_CONFIG
+          
+          # Start nginx
+          exec nginx -g 'daemon off;'

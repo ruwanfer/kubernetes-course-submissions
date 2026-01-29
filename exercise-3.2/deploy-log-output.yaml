@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-deployment
+  labels:
+    app: log-output
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      containers:
+      - name: log-output-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        env:
+        - name: LOG_LEVEL
+          value: "INFO"
+        # Create a simple HTML response for root path
+        command: ["/bin/sh"]
+        args: ["-c", "echo '<html><body><h1>Log Output Application</h1><p>Log Level: $LOG_LEVEL</p><p>Timestamp: $(date)</p></body></html>' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-output-service
+spec:
+  selector:
+    app: log-output
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
